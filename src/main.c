@@ -1,5 +1,6 @@
 /* Wimg main function */
 #include <SDL2/SDL.h>
+/*#include <SDL_image.h>*/
 #include <wc/io.h>
 
 #define WIN_WIDTH	640
@@ -7,22 +8,22 @@
 
 static SDL_Window*	window;		/* Window pointer */
 static SDL_Surface*	surface;	/* Surface pointer */
-static SDL_Surface* image;		/*  */
+static SDL_Surface* image;		/* Image pointer */
 
 static void init();
 static void update();
 static void quit();
 
 int main(int argc, char* args[]) {
-	init();
-	for(;;) update();
+	init(args[1]);
+	while(1) update();
 	quit();
 	return 0;
 }
 
-static void init() {
+static void init(char* file) {
 	/* Initialize SDL*/
-	if(SDL_Init(SDL_INIT_VIDEO) < 0) out(SDL_GetError());
+	if(SDL_Init(SDL_INIT_VIDEO) < 0) outl(SDL_GetError());
 	/* Create window */
 	window = SDL_CreateWindow(
 		"Wimg", 
@@ -34,11 +35,16 @@ static void init() {
 	);
 	/* Get surface */
 	surface = SDL_GetWindowSurface(window);
+
+	//Load image
+	if (image = SDL_LoadBMP(file));
+	else outl(SDL_GetError());
 }
 
 static void update() {
 	/* Fill the surface black */
-    SDL_FillRect(surface, NULL, 0);
+    /* SDL_FillRect(surface, NULL, 0); */
+	SDL_BlitSurface(image, NULL, surface, NULL);
     /* Update the surface */
     SDL_UpdateWindowSurface(window);
 	/* Event handler */
